@@ -23,6 +23,8 @@ while True:
     if ret == False:
         continue
     
+    frame_flip = cv2.flip(frame, 1)
+    
     faces = face_cascade.detectMultiScale(gray_frame, 1.3, 5)
     
     if len(faces) == 0:
@@ -50,7 +52,7 @@ while True:
         
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         
-    cv2.imshow("faces", frame)
+    cv2.imshow("faces", frame_flip)
     
     key_pressed = cv2.waitKey(1) & 0xFF
     

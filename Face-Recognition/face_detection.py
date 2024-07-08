@@ -2,18 +2,18 @@ import cv2
 import cv2.data
 import numpy as np
 
-cap = cv2.VideoCapture(0)
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')
+cap = cv2.VideoCapture(0)
 
 while True:
     ret, frame = cap.read()
     
-    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    frame_flip = cv2.flip(frame, 1)
+    
+    gray_frame = cv2.cvtColor(frame_flip, cv2.COLOR_BGR2GRAY)
     
     if ret == False:
         continue
-    
-    frame_flip = cv2.flip(frame, 1)
     
     faces = face_cascade.detectMultiScale(gray_frame, 1.3, 5)
     
@@ -24,11 +24,11 @@ while True:
         x, y, w, h = face
         
         offset = 5
-        face_offset = frame[y-offset: y+h+offset, x-offset: x+w+offset]
+        face_offset = frame_flip[y-offset: y+h+offset, x-offset: x+w+offset]
         face_selection = cv2.resize(face_offset, (100, 100))
         
         cv2.imshow("Face", face_selection)
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 00), 2)
+        cv2.rectangle(frame_flip, (x, y), (x+w, y+h), (0, 255, 00), 2)
         
     cv2.imshow("Faces", frame_flip)
     

@@ -58,6 +58,8 @@ print(trainset.shape)
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
+detected_names = set()
+
 while True:
     ret, frame = cap.read()
     
@@ -71,7 +73,7 @@ while True:
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
     
     if len(faces) == 0:
-        continue
+        detected_names.add("No one arrive")
     
     for face in faces:
         x, y, w, h = face
@@ -81,6 +83,9 @@ while True:
         face_section = cv2.resize(face_offsets, (100, 100))
         
         out = knn(trainset, face_section.flatten())
+        
+        detected_name = names[int(out)]
+        detected_names.add(detected_name)
         
         cv2.putText(frame_flip, names[int(out)], (x, y-10), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
         cv2.rectangle(frame_flip, (x, y), (x+w, y+h), (255, 255, 255), 2)
@@ -92,3 +97,15 @@ while True:
     
 cap.release()
 cv2.destroyAllWindows()
+
+
+if "No one arrive" in detected_names:
+    detected_names.remove("No one arrive")
+    if len(detected_names) == 0:
+        detected_names.add("No one arrive")
+        
+for name in detected_names:
+    if name == "No one arrive":
+        print(name)
+    else:
+        print(f"{name}, already arrive")

@@ -1,5 +1,8 @@
 const video = document.getElementById('video');
-const captureButton = document.getElementById('captureButton');
+const modal = document.getElementById('myModal');
+const span = document.getElementsByClassName('close')[0];
+
+let isCapturing = false;
 
 Promise.all([
     faceapi.nets.tinyFaceDetector.loadFromUri('models/'),
@@ -30,10 +33,15 @@ video.addEventListener('play', async () => {
         faceapi.draw.drawDetections(canvas, resizedDetections);
         faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
         faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+
+        if (detections.length > 0 && !isCapturing) {
+            captureImage();
+        }
     }, 100);
 });
 
-captureButton.addEventListener('click', () => {
+function captureImage() {
+    isCapturing = true;
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -42,7 +50,7 @@ captureButton.addEventListener('click', () => {
 
     canvas.toBlob(blob => {
         const now = new Date();
-        const timestamp = now.toISOString().replace(/[:.]/g, '-'); // Replace : and . with - to make the filename safe
+        const timestamp = now.toISOString().replace(/[:.]/g, '-');
         const filename = `captured-image-${timestamp}.png`;
 
         const formData = new FormData();
@@ -53,7 +61,29 @@ captureButton.addEventListener('click', () => {
             body: formData
         })
         .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+        .then(data => {
+            console.log(data);
+            modal.style.display = "block";
+            setTimeout(() => {
+                isCapturing = false;
+                modal.style.display = "none";
+            }, 30000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            isCapturing = false;
+        });
     }, 'image/png');
-});
+}
+
+span.onclick = function() {
+    modal.style.display = "none";
+    isCapturing = false;
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+        isCapturing = false;
+    }
+}

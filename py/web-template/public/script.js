@@ -40,15 +40,20 @@ captureButton.addEventListener('click', () => {
     const context = canvas.getContext('2d');
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const now = new Date();
-    const timestamp = now.toLocaleString().replace(/[/, :, ]/g, '-'); 
-    const filename = `captured-image-${timestamp}.png`;
+    canvas.toBlob(blob => {
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[:.]/g, '-'); // Replace : and . with - to make the filename safe
+        const filename = `captured-image-${timestamp}.png`;
 
-    const dataUrl = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+        const formData = new FormData();
+        formData.append('image', blob, filename);
+        
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }, 'image/png');
 });

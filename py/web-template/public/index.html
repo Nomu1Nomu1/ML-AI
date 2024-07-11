@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <script src="face-api.min.js"></script>
+  <script defer src="face-api.min.js"></script>
   <script defer src="script.js"></script>
   <style>
     body {
@@ -18,6 +18,7 @@
       justify-content: center;
       align-items: center;
       background-color: #000;
+      flex-direction: column;
     }
 
     #video {
@@ -27,12 +28,19 @@
     #button-container {
       display: flex;
       justify-content: center;
-      width: 720px;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
-    #captureButton {
-      position: absolute;
-      bottom: 10px;
+    #nameInput {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    #startButton {
       padding: 10px 20px;
       font-size: 16px;
       background-color: #4CAF50;
@@ -40,6 +48,11 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #startButton:hover {
+      background-color: #45a049;
     }
 
     canvas {
@@ -61,41 +74,41 @@
     }
 
     .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
   <div id="button-container">
-    <video id="video" width="720" height="560" autoplay muted></video>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button id="startButton">Start Camera</button>
+  </div>
+  <video id="video" width="720" height="560" autoplay muted></video>
 
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <p>Image successfully saved</p>
-      </div>
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>Absensi berhasil</p>
     </div>
-
   </div>
 </body>
 

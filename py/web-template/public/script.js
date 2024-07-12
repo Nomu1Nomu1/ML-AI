@@ -50,9 +50,8 @@ function startVideo() {
     
             if (detections.length > 0 && !isCapturing) {
                 captureImage();
-                clearInterval(interval)
             }
-        }, 100);
+        }, 1000);
     });
 }
 
